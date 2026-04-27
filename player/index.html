@@ -5,59 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LuxPlayer — Universal Edition</title>
 
-    <!--
-    ============================================================
-    LuxPlayer — index.html  (Universal Edition)
-    ------------------------------------------------------------
-    Supported formats (auto-detected from URL):
-      • MP4 / WebM / Ogg  — direct native playback
-      • HLS  (.m3u8)      — via Shaka Player
-      • DASH (.mpd)       — via Shaka Player
-
-    To change the video, edit data-src on #lux-player.
-    To add subtitle tracks for MP4, add <track> elements inside <video>.
-    HLS/DASH subtitle tracks are detected automatically from the manifest.
-    ============================================================
-  -->
-
     <link rel="stylesheet" href="player.css" />
 
-    <!--
-    Shaka Player (Google) — open-source, ad-free library.
-    Handles HLS, DASH, and plain MP4/WebM in one script.
-    No trackers, no ads, purely functional streaming codec.
-    https://shaka-player-demo.appspot.com/docs/api/index.html
-  -->
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4/dist/shaka-player.compiled.js"></script>
   </head>
   <body>
-    <!-- ══════════════════════════════════════════════════════════
-       PLAYER WRAPPER
-       Change data-src to any MP4, .m3u8, or .mpd URL.
-       ══════════════════════════════════════════════════════════ -->
     <div
       id="lux-player"
       class="lux-player"
-      data-src="https://your-site.com/stream/playlist.m3u8
+      data-src=""
     >
-      <!-- ── VIDEO ELEMENT ──────────────────────────────────────── -->
-      <!--
-      crossorigin="anonymous" required for external HLS/DASH streams.
-      Shaka Player attaches to this element and handles all formats.
-      <track> elements below are fallback subtitles for plain MP4.
-      HLS/DASH subtitle tracks are loaded automatically from the manifest.
-    -->
       <video
         id="lux-video"
         class="lux-video"
         crossorigin="anonymous"
         playsinline
       >
-        <!--
-        FALLBACK SUBTITLE TRACKS (used when playing local/MP4 files).
-        Shaka Player reads these for plain MP4; for HLS/DASH, subtitles
-        come from the manifest and are listed in the in-player CC menu.
-      -->
         <track
           kind="subtitles"
           label="English"
@@ -84,24 +47,15 @@
         />
       </video>
 
-      <!-- ── SUBTITLE OVERLAY ───────────────────────────────────── -->
       <div id="lux-subtitle" class="lux-subtitle" aria-live="polite"></div>
 
-      <!-- ── BUFFERING SPINNER ─────────────────────────────────── -->
       <div id="lux-spinner" class="lux-spinner" aria-hidden="true">
         <svg viewBox="0 0 50 50">
           <circle cx="25" cy="25" r="20" fill="none" stroke-width="4" />
         </svg>
       </div>
 
-      <!-- ── ERROR OVERLAY ──────────────────────────────────────── -->
-      <!--
-      Shown when Shaka Player cannot load the source.
-      Message: "Video format not supported or link broken."
-      Hidden by default; JS adds class .lux-error-visible to show it.
-    -->
       <div id="lux-error" class="lux-error" hidden>
-        <!-- Broken-link / film-reel icon -->
         <svg
           class="lux-error-icon"
           viewBox="0 0 24 24"
@@ -121,7 +75,6 @@
         <button id="lux-error-retry" class="lux-error-retry">Try Again</button>
       </div>
 
-      <!-- ── BIG PLAY OVERLAY ───────────────────────────────────── -->
       <button id="lux-big-play" class="lux-big-play" aria-label="Play">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path
@@ -130,16 +83,12 @@
         </svg>
       </button>
 
-      <!-- ══════════════════════════════════════════════════════════
-         CONTROL BAR  (dark glassmorphism)
-         ══════════════════════════════════════════════════════════ -->
       <div
         id="lux-controls"
         class="lux-controls"
         role="toolbar"
         aria-label="Video controls"
       >
-        <!-- ── SEEK / PROGRESS ───────────────────────────────── -->
         <div class="lux-progress-wrapper" role="group" aria-label="Seek">
           <div id="lux-buffered" class="lux-buffered"></div>
           <div id="lux-played" class="lux-played"></div>
@@ -163,11 +112,8 @@
           </div>
         </div>
 
-        <!-- ── BOTTOM ROW ─────────────────────────────────────── -->
         <div class="lux-bottom-row">
-          <!-- LEFT CLUSTER ─────────────────────────────────── -->
           <div class="lux-left">
-            <!-- Play / Pause -->
             <button id="lux-play-btn" class="lux-btn" aria-label="Play">
               <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor">
                 <path
@@ -180,7 +126,6 @@
               </svg>
             </button>
 
-            <!-- Volume / Mute -->
             <div class="lux-volume-group">
               <button id="lux-mute-btn" class="lux-btn" aria-label="Mute">
                 <svg
@@ -230,7 +175,6 @@
               />
             </div>
 
-            <!-- Time -->
             <span class="lux-time" aria-live="off">
               <span id="lux-current">0:00</span>
               <span class="lux-time-sep">/</span>
@@ -238,9 +182,7 @@
             </span>
           </div>
 
-          <!-- RIGHT CLUSTER ────────────────────────────────── -->
           <div class="lux-right">
-            <!-- CC / Subtitles menu -->
             <div class="lux-cc-wrapper">
               <button
                 id="lux-cc-btn"
@@ -260,7 +202,6 @@
                   <path d="M7 15h4M15 15h2M7 11h2M11 11h6" />
                 </svg>
               </button>
-              <!-- Items injected by player.js after manifest loads -->
               <div
                 id="lux-cc-menu"
                 class="lux-popup-menu"
@@ -272,7 +213,6 @@
               </div>
             </div>
 
-            <!-- Settings (Quality + Speed) -->
             <div class="lux-settings-wrapper">
               <button
                 id="lux-settings-btn"
@@ -295,13 +235,11 @@
                 aria-label="Player settings"
                 hidden
               >
-                <!-- Quality — populated by player.js after manifest loads -->
                 <p class="lux-menu-label">Quality</p>
                 <div id="lux-quality-list"></div>
 
                 <div class="lux-menu-divider"></div>
 
-                <!-- Playback Speed -->
                 <p class="lux-menu-label">Speed</p>
                 <button
                   class="lux-menu-item"
@@ -362,7 +300,6 @@
               </div>
             </div>
 
-            <!-- Picture-in-Picture -->
             <button
               id="lux-pip-btn"
               class="lux-btn"
@@ -375,7 +312,6 @@
               </svg>
             </button>
 
-            <!-- Fullscreen -->
             <button id="lux-fs-btn" class="lux-btn" aria-label="Fullscreen">
               <svg
                 class="icon-expand"
@@ -407,15 +343,9 @@
               </svg>
             </button>
           </div>
-          <!-- /.lux-right -->
+          </div>
         </div>
-        <!-- /.lux-bottom-row -->
       </div>
-      <!-- /#lux-controls -->
-    </div>
-    <!-- /#lux-player -->
-
-    <!-- No external trackers. No ads. Purely functional. -->
     <script src="player.js"></script>
   </body>
 </html>
