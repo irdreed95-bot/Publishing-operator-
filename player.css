@@ -1,1 +1,272 @@
+/*
+  ============================================================
+  Dreed Player — player.css
+  ------------------------------------------------------------
+  Cinematic dark theme with Dreed red accent (#E50914).
+  Designed for full-viewport mobile webview embedding.
+  Overrides Plyr CSS custom properties for seamless theming.
+  ============================================================
+*/
 
+
+/* ── DESIGN TOKENS ─────────────────────────────────────────── */
+:root {
+  /* Plyr theming variables — these override Plyr's defaults */
+  --plyr-color-main:                    #E50914;
+  --plyr-video-background:              #000;
+  --plyr-font-family:                   'Segoe UI', system-ui, -apple-system, sans-serif;
+  --plyr-font-size-base:                15px;
+  --plyr-font-size-small:               13px;
+  --plyr-font-size-time:                13px;
+  --plyr-font-size-menu:                14px;
+  --plyr-font-weight-regular:           500;
+  --plyr-font-weight-bold:              700;
+
+  /* Control bar */
+  --plyr-video-controls-background:
+    linear-gradient(rgba(0,0,0,0) 0%, rgba(0,0,0,0.88) 100%);
+  --plyr-control-spacing:               12px;
+  --plyr-control-radius:                6px;
+  --plyr-control-icon-size:             20px;
+
+  /* Range / seek bar */
+  --plyr-range-fill-background:         #E50914;
+  --plyr-range-thumb-background:        #fff;
+  --plyr-range-thumb-height:            14px;
+  --plyr-range-thumb-shadow:            0 0 6px rgba(229,9,20,0.55);
+
+  /* Tooltip */
+  --plyr-tooltip-background:            rgba(8, 0, 3, 0.92);
+  --plyr-tooltip-color:                 #fff;
+  --plyr-tooltip-padding:               4px 10px;
+  --plyr-tooltip-radius:                6px;
+  --plyr-tooltip-shadow:                0 4px 16px rgba(0,0,0,0.6);
+
+  /* Menu (settings popup) */
+  --plyr-menu-background:               rgba(8, 0, 3, 0.95);
+  --plyr-menu-color:                    rgba(255,255,255,0.85);
+  --plyr-menu-shadow:                   0 8px 32px rgba(0,0,0,0.8);
+  --plyr-menu-radius:                   10px;
+
+  /* Captions */
+  --plyr-captions-background:           rgba(0,0,0,0.75);
+  --plyr-captions-text-color:           #fff;
+
+  /* Dreed custom tokens */
+  --dreed-accent:       #E50914;
+  --dreed-accent-glow:  rgba(229, 9, 20, 0.5);
+}
+
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ── BASE LAYOUT — full viewport ────────────────────────────── */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: var(--plyr-font-family);
+}
+
+/* Wrapper stretches to full viewport */
+.dreed-wrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+/* Plyr container fills the wrapper */
+.dreed-wrap .plyr {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  border-radius: 0;
+}
+
+.dreed-wrap .plyr video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+
+/* ── PLYR SEEK BAR — glowing red fill ───────────────────────── */
+.plyr__progress input[type='range']::-webkit-slider-runnable-track {
+  background:
+    linear-gradient(
+      to right,
+      #E50914 var(--plyr-range-fill-background, 0%),
+      rgba(255,255,255,0.2) 0%
+    );
+}
+
+/* Thumb glow */
+.plyr__progress input[type='range']::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 3px rgba(229,9,20,0.25),
+    0 0 10px rgba(229,9,20,0.5);
+}
+
+/* Volume filled portion */
+.plyr__volume input[type='range']::-webkit-slider-thumb {
+  box-shadow: 0 0 8px rgba(229,9,20,0.4);
+}
+
+
+/* ── PLYR LARGE PLAY BUTTON ─────────────────────────────────── */
+.plyr__control--overlaid {
+  background: var(--dreed-accent) !important;
+  box-shadow:
+    0 0 0 8px rgba(229,9,20,0.18),
+    0 0 40px rgba(229,9,20,0.4),
+    0 16px 48px rgba(0,0,0,0.6) !important;
+  padding: 20px !important;
+}
+.plyr__control--overlaid:hover,
+.plyr__control--overlaid:focus {
+  background: #c9040f !important;
+  box-shadow:
+    0 0 0 14px rgba(229,9,20,0.14),
+    0 0 56px rgba(229,9,20,0.55),
+    0 20px 56px rgba(0,0,0,0.65) !important;
+  transform: scale(1.08);
+}
+.plyr__control--overlaid svg {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+
+/* ── PLYR CONTROL ICONS ─────────────────────────────────────── */
+/* Active / pressed control buttons get red accent */
+.plyr__controls .plyr__control[aria-pressed='true'],
+.plyr__controls .plyr__control.plyr__tab-focus,
+.plyr__controls .plyr__control:hover {
+  background: rgba(229, 9, 20, 0.18) !important;
+  color: #fff !important;
+}
+
+/* Active captions button */
+.plyr__controls .plyr__control[data-plyr='captions'][aria-pressed='true'] {
+  color: var(--dreed-accent) !important;
+}
+
+
+/* ── PLYR SETTINGS MENU ─────────────────────────────────────── */
+.plyr__menu__container {
+  background: rgba(8, 0, 3, 0.96) !important;
+  border: 1px solid rgba(229,9,20,0.18) !important;
+  box-shadow:
+    0 0 0 1px rgba(229,9,20,0.06),
+    0 12px 40px rgba(0,0,0,0.85) !important;
+}
+
+.plyr__menu__container .plyr__control {
+  color: rgba(255,255,255,0.82) !important;
+}
+.plyr__menu__container .plyr__control[role='menuitemradio'][aria-checked='true'] {
+  color: var(--dreed-accent) !important;
+}
+.plyr__menu__container .plyr__control[role='menuitemradio'][aria-checked='true']::before {
+  background: var(--dreed-accent) !important;
+  box-shadow: 0 0 6px var(--dreed-accent) !important;
+}
+
+
+/* ── PLYR CAPTIONS ──────────────────────────────────────────── */
+.plyr__captions {
+  font-size: clamp(14px, 2.2vw, 21px) !important;
+  font-weight: 500 !important;
+}
+.plyr__caption {
+  background: rgba(0, 0, 0, 0.75) !important;
+  border-radius: 5px !important;
+  padding: 4px 14px !important;
+  color: #fff !important;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.95) !important;
+}
+
+
+/* ── ERROR OVERLAY ──────────────────────────────────────────── */
+.dreed-error {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(4, 0, 2, 0.94);
+  text-align: center;
+  padding: 40px 32px;
+  animation: dreed-err-in 0.3s ease;
+}
+.dreed-error[hidden] { display: none; }
+
+@keyframes dreed-err-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.dreed-error svg {
+  width: 54px;
+  height: 54px;
+  color: var(--dreed-accent);
+  filter: drop-shadow(0 0 10px var(--dreed-accent-glow));
+  flex-shrink: 0;
+}
+
+.dreed-error-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  max-width: 340px;
+  line-height: 1.4;
+}
+
+.dreed-error-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.46);
+  max-width: 300px;
+  line-height: 1.55;
+}
+
+#dreed-retry {
+  margin-top: 4px;
+  padding: 11px 32px;
+  background: var(--dreed-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--plyr-font-family);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 24px var(--dreed-accent-glow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#dreed-retry:hover  { transform: scale(1.05); box-shadow: 0 0 36px var(--dreed-accent-glow); }
+#dreed-retry:active { transform: scale(0.96); }
+
+
+/* ── SAFE-AREA PADDING (iPhone notch / Dynamic Island) ──────── */
+@supports (padding: max(0px)) {
+  .plyr__controls {
+    padding-bottom: max(var(--plyr-control-spacing), env(safe-area-inset-bottom)) !important;
+    padding-left:   max(var(--plyr-control-spacing), env(safe-area-inset-left))   !important;
+    padding-right:  max(var(--plyr-control-spacing), env(safe-area-inset-right))  !important;
+  }
+}
