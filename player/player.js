@@ -5,16 +5,16 @@
  * Engine  : Shaka Player (Google, open-source)
  * Formats : MP4 · WebM · HLS (.m3u8) · DASH (.mpd)
  * Features:
- *   • Universal format detection & adaptive streaming
- *   • Live quality switching (auto-detected from manifest)
- *   • Multi-language subtitle menu (from manifest or <track>)
- *   • Playback speed: 0.25× – 2×
- *   • Play/Pause, Volume/Mute, Seek, PiP, Fullscreen
- *   • Glowing red progress bar & volume slider
- *   • Styled error overlay with retry button
- *   • Auto-hide controls after 3 s idle
- *   • Full keyboard shortcuts
- *   • Zero ads, zero trackers, zero external analytics
+ * • Universal format detection & adaptive streaming
+ * • Live quality switching (auto-detected from manifest)
+ * • Multi-language subtitle menu (from manifest or <track>)
+ * • Playback speed: 0.25× – 2×
+ * • Play/Pause, Volume/Mute, Seek, PiP, Fullscreen
+ * • Glowing red progress bar & volume slider
+ * • Styled error overlay with retry button
+ * • Auto-hide controls after 3 s idle
+ * • Full keyboard shortcuts
+ * • Zero ads, zero trackers, zero external analytics
  *
  * Dependency: shaka-player.compiled.js (CDN, see index.html)
  * ============================================================
@@ -125,16 +125,15 @@ function initPlayer() {
 
   async function loadSource() {
     /* ── URL parameter takes priority over data-src ──────────────
-       Usage: player/index.html?video=https://example.com/movie.mp4
-              player/index.html?video=https://example.com/live.m3u8
-       If no ?video= param is present, the default data-src is used.
+       Usage: player/index.html?url=https://example.com/movie.mp4
+       If no ?url= param is present, the default data-src is used.
     ────────────────────────────────────────────────────────────── */
     const params  = new URLSearchParams(window.location.search);
-    const urlSrc  = params.get('video');
+    const urlSrc  = params.get('url') || params.get('video');
     const src     = urlSrc ? decodeURIComponent(urlSrc) : player.dataset.src;
 
     if (!src) {
-      console.warn('[LuxPlayer] No video source. Add ?video=URL or set data-src.');
+      console.warn('[LuxPlayer] No video source. Add ?url=URL or set data-src.');
       showError('No video source provided.');
       return;
     }
@@ -264,7 +263,7 @@ function initPlayer() {
         `${(video.buffered.end(video.buffered.length - 1) / video.duration) * 100}%`;
     }
   });
-
+   
   seekBar.addEventListener('input', () => {
     if (video.duration) video.currentTime = (seekBar.value / 100) * video.duration;
   });
@@ -418,9 +417,7 @@ function initPlayer() {
 
   function buildSubtitleMenu() {
     /* Clear everything except the label */
-    ccMenu.querySelectorAll('.lux-menu-item').forEach(b => b.remove());
-
-    /* ── "Off" option (always first) ── */
+    ccMenu.querySelectorAll('.lux-menu-item').forEach(b => b.remove());    /* ── "Off" option (always first) ── */
     const offBtn = makeMenuItem('Off', true);
     offBtn.dataset.trackIndex = '-1';
     ccMenu.appendChild(offBtn);
@@ -511,7 +508,7 @@ function initPlayer() {
     for (let i = 0; i < video.textTracks.length; i++) {
       video.textTracks[i].mode = 'hidden';
     }
-
+     
     if (index < 0) {
       /* Off */
       if (shakaPlayer) shakaPlayer.setTextTrackVisibility(false);
@@ -682,8 +679,7 @@ function initPlayer() {
     if (!settMenu.contains(e.target) && e.target !== settBtn) {
       settMenu.hidden = true;
       settBtn.setAttribute('aria-expanded', 'false');
-    }
-    if (anyMenuOpen()) player.classList.add('lux-active');
+    }if (anyMenuOpen()) player.classList.add('lux-active');
   });
 
   /* Keep controls visible while playing / menus open */
